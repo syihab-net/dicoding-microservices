@@ -1,0 +1,35 @@
+# Attribute version pada docker-compose.yml untuk saat ini diabaikan (obsolete) jadi di sini tidak perlu
+# version: '3'
+
+# Tag service untuk menentukan nama service
+services:
+  # Service untuk database dengan nama item-db
+  item-db:
+    # Tag image untuk menentukan image yang akan digunakan di sini untuk database menggunakan mongo:3
+    image: mongo:3
+    # Tag container_name untuk memberikan nama agar bisa custom nama container sesuai kriteria
+    container_name: item-db
+    # Tag restart untuk menentukan restart policy agar container akan di restart jika terjadi error
+    restart: always
+    # Tag volumes untuk menentukan volume yang akan digunakan
+    volumes:
+      - app-db:/data/db
+
+  # Service untuk aplikasi dengan nama item-app
+  item-app:
+    # Tag image untuk menentukan image yang akan digunakan di sini untuk aplikasi menggunakan ghcr.io/syihab-net/item-app:v1 dari GitHub Packages saya
+    image: ghcr.io/syihab-net/item-app:v1
+    # Tag container_name untuk memberikan nama agar bisa custom nama container sesuai kriteria
+    container_name: item-app
+    # Tag restart untuk menentukan restart policy agar container akan di restart jika terjadi error
+    restart: always
+    # Tag depends_on untuk menentukan dependency yang akan digunakan untuk memastikan container item-db sudah dijalankan sebelum container item-app
+    depends_on:
+      - item-db
+    # Tag ports untuk menentukan port yang akan digunakan oleh host
+    ports:
+      - "80:8080"
+
+# Tag volumes untuk membuat volume yang akan digunakan
+volumes:
+  app-db:
